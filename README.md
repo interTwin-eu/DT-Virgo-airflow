@@ -17,6 +17,10 @@ Airflow logs -> fluent bit -> Logstash -> ElasticSearch -> Kibana/Airflow
 
 ## Airflow installation
 
+- run [install script](install-airflow.sh). Creates namespace if it does not exists and pvc
+```
+./install-airflow.sh
+```
 - check installation with helm
 ```
 helm ls -n airflow
@@ -46,7 +50,15 @@ NAME                        STATUS   VOLUME                                     
 data-airflow-postgresql-0   Bound    pvc-f85ffcc3-0ecb-4132-b3f3-7a561d08957e   8Gi        RWO            longhorn       4h12m
 logs-airflow-triggerer-0    Bound    pvc-38b2590c-c20b-48e4-b95e-39ae3d82adc8   100Gi      RWO            longhorn       4h12m
 ```
-
+- to uninstall:
+```
+helm uninstall airflow -n airflow
+```
+- and delete pvcs if necessary (warning: you'll lose the data they contain):
+```
+k delete pvc -n airflow data-airflow-postgresql-0
+k delete pvc -n airflow logs-airflow-triggerer-0 
+```
 
 ## ELK Installation
 
