@@ -62,6 +62,16 @@ k delete pvc -n airflow logs-airflow-triggerer-0
 
 ## ELK Installation
 
+- run install scripts for [ElasticSearch](install-elasticsearch.sh), [FluentBit](install-fluentbit.sh), [Kibana](install-kibana.sh):
+```
+./install-elasticsearch.sh
+./install-fluentbit.sh
+./install-kibana.sh
+```
+- for Logstash do:
+```
+k apply  -f logstash.yaml 
+``` 
 - check installation with helm
 ```
 helm ls -n elastic
@@ -100,4 +110,18 @@ NAME                                          STATUS   VOLUME                   
 elasticsearch-master-elasticsearch-master-1   Bound    pvc-ce229a6f-576d-4220-8f4c-3d73fbfa660f   30Gi       RWO            longhorn       4h38m
 elasticsearch-master-elasticsearch-master-0   Bound    pvc-38544109-58cf-4033-8e83-d4c378944bd0   30Gi       RWO            longhorn       4h38m
 elasticsearch-master-elasticsearch-master-2   Bound    pvc-3b08436d-7035-439a-80c1-604c8ecdf1fc   30Gi       RWO            longhorn       4h38m
+```
+- to uninstall:
+```
+helm uninstall elasticsearch -n elastic
+helm uninstall fluent-bit -n elastic
+helm uninstall kibana -n elastic
+```
+- and for Logstash:
+```
+k delete -f logstash.yaml
+``` 
+- and delete pvcs if necessary (warning: you'll lose the data they contain):
+```
+k delete pvc -n elastic elasticsearch-master-elasticsearch-master-1
 ```
